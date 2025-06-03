@@ -26,16 +26,34 @@
             <label for="phone" class="form-label">Phone Number:</label>
             <input type="tel" id="phone" name="phone" class="form-control" required />
         </div>
-        <button id="btnSubmit" type="submit" class="btn btn-primary">Submit</button>
-        <div class="form-group">
-            <div class="h-captcha" data-sitekey="abd4766a-259c-4c5c-b262-4a18d2d6f31e"></div>
+        <button id="btnSubmit" type="submit" class="btn btn-primary">Send</button>
+        <div class="form-group mb-3">
+            <span id="pleaseMsg" class="form-text text-muted">Please check the box below:</span><br />
+            <div class="h-captcha" data-sitekey="abd4766a-259c-4c5c-b262-4a18d2d6f31e" data-size="compact" data-callback="hCapSuccess"></div>
+        </div>
+        <div id="savingMsg" class="mb-3" style="display:none">
+            <p>Saving information...</p>
         </div>
     </form>
     <!-- Bootstrap JS Bundle CDN -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" crossorigin="anonymous"></script>
     <script>
+        let captchaSuccess = false;
+        function hCapSuccess() {
+            // This function is called when hCaptcha is successfully completed
+            captchaSuccess = true;
+            document.getElementById('pleaseMsg').style.display = 'none';
+            console.log('hCaptcha completed successfully.');
+        }
+
         document.getElementById('contactForm').addEventListener('submit', function (event) {
             event.preventDefault(); // Prevent the default form submission
+            document.getElementById('pleaseMsg').style.display = 'none';
+
+            if (!captchaSuccess) {
+                document.getElementById('pleaseMsg').style.display = 'block';
+                return;
+            }
 
             // Collect form data
             var hToken = this.elements['h-captcha-response'].value; // document.getElementById('h-captcha-response').value;
@@ -45,8 +63,20 @@
             }
 
             // Send the data to the server
-            ccms___PostForm('/api/Contacts', 'contactForm', hToken);
+            document.getElementById('savingMsg').style.display = 'block';
+            const result = ccms___PostForm('/api/Contacts', 'contactForm', hToken);
+            result.then(response => {
+                document.getElementById('savingMsg').style.display = 'none';
+                if (response.ok === true) {
+                    alert("Successfully saved contact.")
+                }
+            }).catch(error => {
+                document.getElementById('savingMsg').style.display = 'none';
+                console.error('Error submitting form:', error);
+                alert('An error occurred while submitting the form.');
+            });
         });
+
     </script>
 </body>
 </html>

@@ -4,6 +4,7 @@ using Cosmos.DynamicConfig;
 using Cosmos.EmailServices;
 using System.Configuration;
 using System.Runtime.CompilerServices;
+using System.Threading.RateLimiting;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -37,8 +38,24 @@ builder.Services.AddAntiforgery(options =>
     options.HeaderName = "X-XSRF-TOKEN"; // Custom header name for the anti-forgery token
 });
 
+//  The following example permits 10 requests per minute by user (identity) or globally:
+builder.Services.AddRateLimiter(options =>
+{
+    options.GlobalLimiter = PartitionedRateLimiter.Create<HttpContext, string>(httpContext =>
+        RateLimitPartition.GetFixedWindowLimiter(
+            partitionKey: httpContext.Request.Headers.Host.ToString(),
+            factory: partition => new FixedWindowRateLimiterOptions
+            {
+                AutoReplenishment = true,
+                PermitLimit = 10,
+                QueueLimit = 0,
+                Window = TimeSpan.FromMinutes(1)
+            }));
+});
 
 var app = builder.Build();
+
+app.UseRateLimiter();
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())

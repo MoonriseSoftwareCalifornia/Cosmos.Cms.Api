@@ -19,27 +19,35 @@ namespace Cosmos.Cms.Api.Controllers
         private readonly IEmailSender emailSender;
         private readonly ILogger<ContactsController> logger;
         private readonly IOptions<HCaptchaOptions> captchaOptions;
+        private readonly IConfiguration configuration;
 
         public ContactsController(
             ILogger<ContactsController> logger,
             IAntiforgery antiforgery,
             ApplicationDbContext dbContext,
             IEmailSender emailSender,
-            IOptions<HCaptchaOptions> captchaOptions)
+            IOptions<HCaptchaOptions> captchaOptions,
+            IConfiguration configuration)
         {
             this.logger = logger;
             this.antiforgery = antiforgery;
             this.dbContext = dbContext;
             this.emailSender = emailSender;
             this.captchaOptions = captchaOptions;
+            this.configuration = configuration;
         }
 
         [HttpPost]
-        public async Task<ActionResult<ContactViewModel>> PostContact([FromBody] ContactViewModel model)
+        public async Task<ActionResult> PostContact([FromBody] ContactViewModel model)
         {
             if (model == null)
             {
                 return BadRequest();
+            }
+
+            if (!await antiforgery.IsRequestValidAsync(HttpContext))
+            {
+                return BadRequest("Invalid antiforgery token.");
             }
 
             if (!await VerifyHCaptchaAsync(Request.Headers["h-captcha-response"].ToString()))
@@ -47,7 +55,14 @@ namespace Cosmos.Cms.Api.Controllers
                 return BadRequest("hCaptcha verification failed.");
             }
 
-            var test = await antiforgery.IsRequestValidAsync(HttpContext);
+
+            var domainName = DynamicConfig.DynamicConfigurationProvider.GetTenantDomainNameFromCookieOrHost(configuration, HttpContext);
+            var validateDomain = await DynamicConfig.DynamicConfigurationProvider.ValidateDomainName(configuration, domainName);
+
+            if (!validateDomain)
+            {
+                return BadRequest("Invalid domain name.");
+            }
 
             model.Id = Guid.NewGuid();
             model.Created = DateTimeOffset.UtcNow;
@@ -58,7 +73,7 @@ namespace Cosmos.Cms.Api.Controllers
             var result = await contactService.AddContactAsync(model);
             // In a real application, you would save the forecast to a database or other storage.
             // For demonstration, just return the received object.
-            return CreatedAtAction(nameof(PostContact), model, model);
+            return Ok("Contact saved.");
         }
 
         private async Task<bool> VerifyHCaptchaAsync(string token)
