@@ -85,12 +85,15 @@ namespace Cosmos.Cms.Api.Controllers
                 var result = await contactService.AddContactAsync(model);
             }
 
+            var htmlDoc = new HtmlAgilityPack.HtmlDocument();
+            htmlDoc.LoadHtml(model.Message);
+
             if (!string.IsNullOrWhiteSpace(connection.OwnerEmail))
             {
                 // Send email to the owner of the connection
                 await emailSender.SendEmailAsync(connection.OwnerEmail,
                     string.IsNullOrWhiteSpace(model.Subject) ? "New Website Message" : model.Subject,
-                    model.Message, model.Email);
+                    model.Message, model.Message, model.Email);
             }
 
             // In a real application, you would save the forecast to a database or other storage.

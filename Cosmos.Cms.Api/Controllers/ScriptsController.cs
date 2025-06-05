@@ -30,6 +30,7 @@ namespace Cosmos.Cms.Api.Controllers
         {
             if (string.IsNullOrWhiteSpace(name))
             {
+                logger.LogError("Script name is null or empty.");
                 return BadRequest("Script name cannot be null or empty.");
             }
 
@@ -38,13 +39,15 @@ namespace Cosmos.Cms.Api.Controllers
 
             if (!validateDomain)
             {
+                logger.LogError("Invalid domain name: {DomainName}", domainName);
                 return BadRequest("Invalid domain name.");
             }
 
             var filePath = Path.Combine(env.WebRootPath, "scripts", $"{name}.js");
             if (!System.IO.File.Exists(filePath))
             {
-               return BadRequest(filePath + " does not exist.");
+                logger.LogError("Script file not found: {FilePath}", filePath);
+                return BadRequest(filePath + " does not exist.");
             }
 
             var tokens = antiforgery.GetAndStoreTokens(HttpContext);
