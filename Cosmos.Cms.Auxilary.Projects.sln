@@ -5,6 +5,10 @@ VisualStudioVersion = 17.13.36105.23
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Cosmos.Cms.Api", "Cosmos.Cms.Api\Cosmos.Cms.Api.csproj", "{ADCF0DF1-F111-447D-BB21-8DBB1CC93112}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Cosmos.MultiTenant.Metrics", "Cosmos.MultiTenant.Metrics\Cosmos.MultiTenant.Metrics.csproj", "{E63718B9-A467-A94C-816A-E7B64C3CDF95}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Cosmos.MultiTenant.Adminstrator", "Cosmos.MultiTenant-Adminstrator\Cosmos.MultiTenant.Adminstrator.csproj", "{ADB68B60-7C7C-F627-5091-3FEAA4DFA0F2}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -15,6 +19,14 @@ Global
 		{ADCF0DF1-F111-447D-BB21-8DBB1CC93112}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{ADCF0DF1-F111-447D-BB21-8DBB1CC93112}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{ADCF0DF1-F111-447D-BB21-8DBB1CC93112}.Release|Any CPU.Build.0 = Release|Any CPU
+		{E63718B9-A467-A94C-816A-E7B64C3CDF95}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E63718B9-A467-A94C-816A-E7B64C3CDF95}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{E63718B9-A467-A94C-816A-E7B64C3CDF95}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E63718B9-A467-A94C-816A-E7B64C3CDF95}.Release|Any CPU.Build.0 = Release|Any CPU
+		{ADB68B60-7C7C-F627-5091-3FEAA4DFA0F2}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{ADB68B60-7C7C-F627-5091-3FEAA4DFA0F2}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{ADB68B60-7C7C-F627-5091-3FEAA4DFA0F2}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{ADB68B60-7C7C-F627-5091-3FEAA4DFA0F2}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

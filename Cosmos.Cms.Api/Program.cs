@@ -2,8 +2,7 @@ using BenjaminAbt.HCaptcha.AspNetCore;
 using Cosmos.Common.Data;
 using Cosmos.DynamicConfig;
 using Cosmos.EmailServices;
-using System.Configuration;
-using System.Runtime.CompilerServices;
+using Microsoft.EntityFrameworkCore;
 using System.Threading.RateLimiting;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -18,6 +17,15 @@ builder.Services.AddTransient((serviceProvider) =>
 {
     return new ApplicationDbContext(serviceProvider);
 });
+
+
+var connectionString = builder.Configuration.GetConnectionString("ConfigDbConnectionString");
+if (string.IsNullOrEmpty(connectionString))
+{
+    throw new InvalidOperationException("Connection string 'ConfigDbConnectionString' not found.");
+}
+builder.Services.AddDbContext<DynamicConfigDbContext>(options =>
+    options.UseCosmos(connectionString: connectionString, databaseName: "configs"));
 
 // Add Email services
 builder.Services.AddCosmosEmailServices(builder.Configuration);
