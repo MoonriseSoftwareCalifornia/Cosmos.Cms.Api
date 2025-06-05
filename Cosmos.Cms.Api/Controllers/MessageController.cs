@@ -9,6 +9,7 @@ using Microsoft.AspNetCore.Identity.UI.Services;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Options;
+using System.Text;
 
 namespace Cosmos.Cms.Api.Controllers
 {
@@ -85,15 +86,34 @@ namespace Cosmos.Cms.Api.Controllers
                 var result = await contactService.AddContactAsync(model);
             }
 
+            var messageContext = new StringBuilder();
+
+            messageContext.AppendLine($"Message received from:<br /><br />{model.FirstName} {model.LastName}");
+            messageContext.AppendLine($"<br />Email address: {model.Email}");
+            if (!string.IsNullOrWhiteSpace(model.Phone))
+            {
+                messageContext.AppendLine($"<br />Phone: {model.Phone}");
+            }
+            if (join)
+            {
+                messageContext.AppendLine($"<br />Note: User joined the contacts list.");
+            }
+            messageContext.AppendLine($"<br />");
+            if (!string.IsNullOrWhiteSpace(model.Subject))
+            {
+                messageContext.AppendLine($"<br />Subject: {model.Subject}");
+            }
+            messageContext.AppendLine($"<br />Message:<br />{model.Message}");
+
             var htmlDoc = new HtmlAgilityPack.HtmlDocument();
-            htmlDoc.LoadHtml(model.Message);
+            htmlDoc.LoadHtml(messageContext.ToString());
 
             if (!string.IsNullOrWhiteSpace(connection.OwnerEmail))
             {
                 // Send email to the owner of the connection
                 await emailSender.SendEmailAsync(connection.OwnerEmail,
                     string.IsNullOrWhiteSpace(model.Subject) ? "New Website Message" : model.Subject,
-                    model.Message, model.Message, model.Email);
+                    htmlDoc.DocumentNode.InnerText, htmlDoc.DocumentNode.OuterHtml, "support@moonrise.net");
             }
 
             // In a real application, you would save the forecast to a database or other storage.
