@@ -9,6 +9,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Cosmos.MultiTenant.Metrics"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Cosmos.MultiTenant.Adminstrator", "Cosmos.MultiTenant-Adminstrator\Cosmos.MultiTenant.Adminstrator.csproj", "{ADB68B60-7C7C-F627-5091-3FEAA4DFA0F2}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Cosmos.Cms.ELoader", "Cosmos.Cms.ELoader\Cosmos.Cms.ELoader.csproj", "{29AC57EF-504B-440C-8643-F637E56A07C9}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -27,6 +29,10 @@ Global
 		{ADB68B60-7C7C-F627-5091-3FEAA4DFA0F2}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{ADB68B60-7C7C-F627-5091-3FEAA4DFA0F2}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{ADB68B60-7C7C-F627-5091-3FEAA4DFA0F2}.Release|Any CPU.Build.0 = Release|Any CPU
+		{29AC57EF-504B-440C-8643-F637E56A07C9}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{29AC57EF-504B-440C-8643-F637E56A07C9}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{29AC57EF-504B-440C-8643-F637E56A07C9}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{29AC57EF-504B-440C-8643-F637E56A07C9}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
